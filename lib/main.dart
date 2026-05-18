@@ -34,11 +34,34 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Drovenue',
+      title: 'Aether MMORPG',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: const Color(0xFF0F111A), // Deep dark background
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF00FFC2), // Neon Cyan accent
+          secondary: Color(0xFFB026FF), // Neon Purple accent
+          surface: Color(0xFF1A1D2D), // Slightly lighter dark surface
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF141622),
+          elevation: 0,
+          centerTitle: true,
+          titleTextStyle: TextStyle(
+            color: Color(0xFF00FFC2),
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+          ),
+        ),
+        cardTheme: CardThemeData(
+          color: const Color(0xFF1A1D2D),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: const BorderSide(color: Color(0xFF2A2D43), width: 1),
+          ),
+          elevation: 8,
+        ),
       ),
       initialRoute: Routes.home,
       getPages: AppPages.pages,
