@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/home_controller.dart';
+import '../../countdown/view/countdown_view.dart';
+import '../../raid/view/raid_view.dart';
+import '../../chat/view/chat_view.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -9,28 +12,28 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: const Text('Aether: World Event Dashboard'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: controller.navigateToRaid,
-              child: const Text('Raid System'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: controller.navigateToChat,
-              child: const Text('Real-time Chat'),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: controller.navigateToCountdown,
-              child: const Text('Countdown Timer'),
-            ),
-          ],
-        ),
+      body: const Column(
+        children: <Widget>[
+          // 1. The Global Pulse
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 24.0),
+            child: CountdownView(),
+          ),
+          
+          // 2. The Geo-Raid
+          RaidView(),
+          
+          Divider(height: 32, thickness: 2),
+          
+          // 3. The Engagement Chat
+          Expanded(
+            child: ChatView(),
+          ),
+        ],
       ),
     );
   }

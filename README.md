@@ -30,6 +30,9 @@ High-frequency multi-user environments, such as the **Raid Join System**, are ma
 
 ## 📉 Firebase Scaling & Cost Optimization Strategy
 
+**Answer to the Engagement Chat Challenge:**
+If 10,000 players are chatting in the engagement box at once, we must limit the query scope using `.limit(50)` and `.where('timestamp', isGreaterThan: X)` so each user only reads a small, recent slice of messages. Instead of a single unbounded collection stream, we should shard the chat by time or room, and use cursor-based pagination for historical data. For highly concurrent, ephemeral chat layers, it is much more cost-effective to use Firebase Realtime Database (billed on bandwidth) rather than Firestore (billed per read).
+
 To remain remarkably cost-efficient at high CCU (Concurrent Users), Project Aether implements strict read-minimization optimizations:
 
 * **Truncated Listener Windows**: Real-time listeners would only observe the newest message window, explicitly bound by temporal filters (e.g., `where('timestamp', isGreaterThanOrEqualTo: startTime)`), ensuring active sockets only ever bill for *new* incoming data.

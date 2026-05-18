@@ -1,5 +1,10 @@
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "aether_linter.dart"
+
 linter:
   rules:
     - always_specify_types
