@@ -3,7 +3,9 @@ import '../../core/constants/app_constants.dart';
 import '../models/raid_model.dart';
 
 class RaidRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+
+  RaidRepository({FirebaseFirestore? firestore}) : _firestore = firestore ?? FirebaseFirestore.instance;
 
   Stream<List<Raid>> getActiveRaids() {
     return _firestore

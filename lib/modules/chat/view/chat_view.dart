@@ -16,19 +16,27 @@ class ChatView extends GetView<ChatController> {
         children: <Widget>[
           Expanded(
             child: Obx(() {
-              if (controller.isLoading.value) {
+              if (controller.isInitialLoading.value) {
                 return const Center(child: CircularProgressIndicator());
               }
               
-              if (controller.messages.isEmpty) {
+              if (controller.allMessages.isEmpty) {
                 return const Center(child: Text('No messages yet.'));
               }
 
               return ListView.builder(
+                controller: controller.scrollController,
                 reverse: true,
-                itemCount: controller.messages.length,
+                itemCount: controller.allMessages.length + (controller.isLoadingMore.value ? 1 : 0),
                 itemBuilder: (BuildContext context, int index) {
-                  final ChatMessage message = controller.messages[index];
+                  if (index == controller.allMessages.length) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  final ChatMessage message = controller.allMessages[index];
                   final bool isMe = message.senderId == controller.currentUserId;
                   
                   return Align(

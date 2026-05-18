@@ -5,22 +5,58 @@ import '../models/chat_message_model.dart';
 class ChatRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Stream<List<ChatMessage>> getChatStream() {
+  /// Listens ONLY to messages that arrive AFTER the user opened the chat.
+  /// Extremely scalable; minimizes read costs.
+  Stream<List<ChatMessage>> listenToNewMessages(DateTime startTime) {
     return _firestore
         .collection(AppConstants.chatsCollection)
+        .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startTime))
         .orderBy('timestamp', descending: true)
         .snapshots()
         .map((QuerySnapshot<Map<String, dynamic>> snapshot) {
       return snapshot.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
         final Map<String, dynamic> data = doc.data();
-        data['id'] = doc.id; // Inject ID
-        // Convert Firestore Timestamp to DateTime for Freezed model
+        data['id'] = doc.id;
         if (data['timestamp'] is Timestamp) {
            data['timestamp'] = (data['timestamp'] as Timestamp).toDate().toIso8601String();
         }
         return ChatMessage.fromJson(data);
       }).toList();
     });
+  }
+
+  /// Fetches a paginated chunk of historical messages.
+  /// Returns a tuple of [messages, lastDocumentSnapshot].
+  Future<Map<String, dynamic>> getHistoricalMessages({
+    DocumentSnapshot<Map<String, dynamic>>? startAfter,
+    int limit = 20,
+    required DateTime maxTime,
+  }) async {
+    Query<Map<String, dynamic>> query = _firestore
+        .collection(AppConstants.chatsCollection)
+        .where('timestamp', isLessThan: Timestamp.fromDate(maxTime))
+        .orderBy('timestamp', descending: true)
+        .limit(limit);
+
+    if (startAfter != null) {
+      query = query.startAfterDocument(startAfter);
+    }
+
+    final QuerySnapshot<Map<String, dynamic>> snapshot = await query.get();
+    
+    final List<ChatMessage> messages = snapshot.docs.map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+      final Map<String, dynamic> data = doc.data();
+      data['id'] = doc.id;
+      if (data['timestamp'] is Timestamp) {
+         data['timestamp'] = (data['timestamp'] as Timestamp).toDate().toIso8601String();
+      }
+      return ChatMessage.fromJson(data);
+    }).toList();
+
+    return <String, dynamic>{
+      'messages': messages,
+      'lastDocument': snapshot.docs.isNotEmpty ? snapshot.docs.last : null,
+    };
   }
 
   Future<void> sendMessage(String text, String senderId) async {
