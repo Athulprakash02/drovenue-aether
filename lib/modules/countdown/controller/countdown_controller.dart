@@ -1,24 +1,30 @@
 import 'dart:async';
 import 'package:get/get.dart';
-import '../../../core/constants/app_constants.dart';
+
+enum BossState { preparing, live }
 
 class CountdownController extends GetxController {
   final RxInt _remainingMilliseconds = 0.obs;
+  final Rx<BossState> bossState = BossState.preparing.obs;
+  
   Timer? _timer;
   DateTime? _endTime;
 
-  int get remainingMilliseconds => _remainingMilliseconds.value;
-  bool get isFinished => _remainingMilliseconds.value <= 0 && _endTime != null;
+  final String bossName = 'Infernal Shadow Dragon';
 
-  // Optimized: Compute formatted string directly to keep the view entirely logic-free
   String get formattedTime {
-    if (_remainingMilliseconds.value <= 0) return '0.0';
+    if (bossState.value == BossState.live || _remainingMilliseconds.value <= 0) {
+      return '00:00:00:000';
+    }
     
-    final int seconds = _remainingMilliseconds.value ~/ 1000;
-    // Extracting tenths of a second (100ms precision)
-    final int deciseconds = (_remainingMilliseconds.value % 1000) ~/ 100;
+    final int totalMs = _remainingMilliseconds.value;
+    final int hours = totalMs ~/ 3600000;
+    final int minutes = (totalMs % 3600000) ~/ 60000;
+    final int seconds = (totalMs % 60000) ~/ 1000;
+    final int milliseconds = totalMs % 1000;
     
-    return '$seconds.$deciseconds';
+    // Format: HH:MM:SS:MS
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}:${milliseconds.toString().padLeft(3, '0')}';
   }
 
   @override
@@ -28,33 +34,44 @@ class CountdownController extends GetxController {
   }
 
   void _startTimer() {
-    // Production Grade: Calculate exact end time to prevent Timer drift.
-    // Periodic timers can lag, so calculating against a fixed DateTime is the most robust approach.
-    _endTime = DateTime.now().add(const Duration(seconds: AppConstants.countdownDurationSeconds));
+    bossState.value = BossState.preparing;
+    // Set for 20 seconds to quickly demonstrate the "LIVE" transition
+    _endTime = DateTime.now().add(const Duration(seconds: 20));
     
-    // Fire every 100ms
+    // Update every 100ms
     const Duration updateInterval = Duration(milliseconds: 100);
+    
+    _timer?.cancel();
     _timer = Timer.periodic(updateInterval, (Timer timer) {
       final DateTime now = DateTime.now();
       
       if (_endTime!.isAfter(now)) {
-        // Update observable state with exact remaining milliseconds
         _remainingMilliseconds.value = _endTime!.difference(now).inMilliseconds;
       } else {
         _remainingMilliseconds.value = 0;
         _timer?.cancel();
+        _triggerBossLive();
+      }
+    });
+  }
+
+  void _triggerBossLive() {
+    bossState.value = BossState.live;
+    
+    // Keep it LIVE for 10 seconds, then reset for the next spawn
+    Future.delayed(const Duration(seconds: 10), () {
+      if (!isClosed) {
+        _startTimer();
       }
     });
   }
 
   void resetTimer() {
-    _timer?.cancel();
     _startTimer();
   }
 
   @override
   void onClose() {
-    // Clean disposal is CRITICAL to prevent memory leaks and zombie timers
     _timer?.cancel();
     super.onClose();
   }
