@@ -49,6 +49,8 @@ Raid joins are handled using Firestore transactions:
 
 ```dart
 FirebaseFirestore.instance.runTransaction(...)
+```
+
 This ensures raid joins remain safe under extreme concurrency.
 
 ## Guarantees
