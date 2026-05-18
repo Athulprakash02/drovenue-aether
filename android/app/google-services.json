@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "842557831192",
+    "project_id": "aether-drovenue",
+    "storage_bucket": "aether-drovenue.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:842557831192:android:94299bec156e4ba394eb6d",
+        "android_client_info": {
+          "package_name": "com.example.drovenue"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpAkOh7UAe9_YsXrOPGTV_tR1l6-753EI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
