@@ -32,9 +32,10 @@ High-frequency multi-user environments, such as the **Raid Join System**, are ma
 
 To remain remarkably cost-efficient at high CCU (Concurrent Users), Project Aether implements strict read-minimization optimizations:
 
-* **Split-Stream Architecture**: The chat module detaches legacy fetches from real-time listening. Real-time snapshot streams are explicitly bound by temporal filters (`where('timestamp', isGreaterThanOrEqualTo: startTime)`), ensuring active sockets only ever bill for *new* incoming data.
-* **Cursor-Based Pagination**: Historical datasets are queried via stateless, non-listening Future chunks (`limit(20)`) utilizing `startAfterDocument()`. 
-* **Aggressive Memory Profiling**: Memory-leaks are prevented explicitly by enforcing `Timer.cancel()` and terminating active `ScrollControllers` inside the `GetxController.onClose()` lifecycle.
+* **Truncated Listener Windows**: Real-time listeners would only observe the newest message window, explicitly bound by temporal filters (e.g., `where('timestamp', isGreaterThanOrEqualTo: startTime)`), ensuring active sockets only ever bill for *new* incoming data.
+* **Cursor-Based Pagination**: Older messages would be fetched using paginated queries via stateless, non-listening Future chunks utilizing `startAfterDocument()`.
+* **Sharding & Partitioning**: Chat traffic could be partitioned by channels or regional shards to reduce hot collection contention and listener fan-out.
+* **Aggressive Memory Profiling**: Memory leaks are prevented explicitly by enforcing `Timer.cancel()` and terminating active `ScrollControllers` inside the `GetxController.onClose()` lifecycle.
 
 ---
 
