@@ -10,7 +10,9 @@ class RaidView extends GetView<RaidController> {
   Widget build(BuildContext context) {
     return Obx(() {
       if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator(color: Color(0xFF00FFC2)));
+        return const Center(
+          child: CircularProgressIndicator(color: Color(0xFF00FFC2)),
+        );
       }
 
       if (controller.activeRaids.isEmpty) {
@@ -32,7 +34,9 @@ class RaidView extends GetView<RaidController> {
           final Raid raid = controller.activeRaids[index];
           final int currentParticipants = raid.participantIds.length;
           final bool isFull = currentParticipants >= raid.maxParticipants;
-          final bool hasAlreadyJoined = raid.participantIds.contains(controller.currentUserId);
+          final bool hasAlreadyJoined = raid.participantIds.contains(
+            controller.currentUserId,
+          );
 
           String statusText = 'ACTIVE';
           Color statusColor = const Color(0xFF00FFC2); // Neon Cyan
@@ -55,10 +59,10 @@ class RaidView extends GetView<RaidController> {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                  children: <Widget>[
                     Expanded(
                       child: Text(
                         raid.title.toUpperCase(),
@@ -72,11 +76,14 @@ class RaidView extends GetView<RaidController> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.15),
+                        color: statusColor,
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: statusColor.withOpacity(0.5)),
+                        border: Border.all(color: statusColor),
                       ),
                       child: Text(
                         statusText,
@@ -93,17 +100,15 @@ class RaidView extends GetView<RaidController> {
                 const SizedBox(height: 12),
                 Text(
                   '$currentParticipants / ${raid.maxParticipants} Slots Filled',
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
                   width: double.infinity,
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: isFull || hasAlreadyJoined || controller.isJoining.value
+                    onPressed:
+                        isFull || hasAlreadyJoined || controller.isJoining.value
                         ? null
                         : () => controller.joinRaid(raid.id),
                     style: ElevatedButton.styleFrom(
@@ -120,10 +125,15 @@ class RaidView extends GetView<RaidController> {
                         ? const SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2),
+                            child: CircularProgressIndicator(
+                              color: Colors.black,
+                              strokeWidth: 2,
+                            ),
                           )
                         : Text(
-                            hasAlreadyJoined ? 'ALREADY JOINED' : (isFull ? 'RAID FULL' : 'JOIN RAID'),
+                            hasAlreadyJoined
+                                ? 'ALREADY JOINED'
+                                : (isFull ? 'RAID FULL' : 'JOIN RAID'),
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1.5,

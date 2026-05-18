@@ -57,8 +57,14 @@ class ChatView extends GetView<ChatController> {
                   final ChatMessage message = controller.allMessages[index];
                   final bool isMe =
                       message.senderId == controller.currentUserId;
-                  final String hh = message.timestamp.hour.toString().padLeft(2, '0');
-                  final String mm = message.timestamp.minute.toString().padLeft(2, '0');
+                  final String hh = message.timestamp.hour.toString().padLeft(
+                    2,
+                    '0',
+                  );
+                  final String mm = message.timestamp.minute.toString().padLeft(
+                    2,
+                    '0',
+                  );
                   final String formattedTime = '$hh:$mm';
 
                   return Align(
@@ -84,7 +90,7 @@ class ChatView extends GetView<ChatController> {
                         ),
                         border: Border.all(
                           color: isMe
-                              ? const Color(0xFF00FFC2).withOpacity(0.3)
+                              ? const Color(0xFF00FFC2).withValues(alpha: 0.3)
                               : const Color(0xFF2A2D43),
                           width: 1,
                         ),
@@ -93,7 +99,7 @@ class ChatView extends GetView<ChatController> {
                         crossAxisAlignment: isMe
                             ? CrossAxisAlignment.end
                             : CrossAxisAlignment.start,
-                        children: [
+                        children: <Widget>[
                           Text(
                             message.text,
                             style: TextStyle(
@@ -105,7 +111,7 @@ class ChatView extends GetView<ChatController> {
                           Text(
                             formattedTime,
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.3),
+                              color: Colors.white.withValues(alpha: 0.3),
                               fontSize: 10,
                             ),
                           ),
@@ -132,7 +138,7 @@ class ChatView extends GetView<ChatController> {
                     decoration: InputDecoration(
                       hintText: 'Transmit message...',
                       hintStyle: TextStyle(
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.white.withValues(alpha: 0.3),
                       ),
                       filled: true,
                       fillColor: const Color(0xFF0F111A),

@@ -11,15 +11,13 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('PROJECT AETHER: COMMAND HUB'),
-      ),
+      appBar: AppBar(title: const Text('PROJECT AETHER: COMMAND HUB')),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
+            colors: <Color>[
               Color(0xFF0F111A), // Deep dark
               Color(0xFF141622), // Slightly lighter
             ],
@@ -32,20 +30,14 @@ class HomeView extends GetView<HomeController> {
               padding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
               child: CountdownView(),
             ),
-            
+
             // 2. The Geo-Raid
-            Expanded(
-              flex: 3,
-              child: RaidView(),
-            ),
-            
+            Expanded(flex: 3, child: RaidView()),
+
             Divider(height: 1, thickness: 1, color: Color(0xFF2A2D43)),
-            
+
             // 3. The Engagement Chat
-            Expanded(
-              flex: 4,
-              child: ChatView(),
-            ),
+            Expanded(flex: 4, child: ChatView()),
           ],
         ),
       ),
