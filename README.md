@@ -84,6 +84,7 @@ For extremely high-frequency ephemeral messaging, Firebase Realtime Database can
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs
 flutter run
+```
 
 ## 🧪 Testing
 
@@ -94,20 +95,20 @@ dart aether_linter.dart
 ```
 
 📦 Tech Stack
-   • Flutter
-   • Dart
-   • GetX
-   • Firebase Firestore
-   • Firebase Authentication
-   • Freezed
-   • JsonSerializable
+   - Flutter
+   - Dart
+   - GetX
+   - Firebase Firestore
+   - Firebase Authentication
+   - Freezed
+   - JsonSerializable
 
 🌌 Notes
 
 Project Aether was engineered as a systems-thinking exercise focused on:
 
-   -distributed concurrency
-   -realtime UI performance
-   -scalable Firebase architecture
-   -reactive state management
-   -production-grade Flutter engineering
+   - distributed concurrency
+   - realtime UI performance
+   - scalable Firebase architecture
+   - reactive state management
+   - production-grade Flutter engineering
